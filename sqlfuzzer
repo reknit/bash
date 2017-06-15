@@ -1,0 +1,16 @@
+#!/bin/bash
+
+echo "Specify the absolute path to the payload file: "
+read payload_file
+
+echo "Please enter the URL with {{}} specifying where the payload should go: "
+read payload_url
+
+#IFS=$'\n'
+while read i; do 
+	echo $payload_url | sed "s/{{}}/$i/g" >> attacks.txt; done < $payload_file
+
+list=$(cat ./attacks.txt)
+
+for j in $list; do 
+	echo $j && curl -i 2 $j; done
